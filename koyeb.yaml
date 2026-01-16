@@ -1,0 +1,9 @@
+version: "1"
+name: icv-hf
+build:
+  dockerfile: Dockerfile
+run:
+  command: ["node", "--optimize-for-size", "--trace-warnings", "server.js"]
+  ports:
+    - port: 8080
+      http: true
