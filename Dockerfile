@@ -38,14 +38,15 @@ RUN npm ci --only=production --no-audit --no-fund --prefer-offline \
 FROM node:20-alpine
 
 # Metadati
-#LABEL maintainer="icv-hf@example.com"
+LABEL maintainer="ICV HF"
 LABEL version="1.0.0"
 LABEL description="ICV HF Application for Koyeb Free Tier"
 
-# Installa runtime dependencies (solo ffmpeg necessario)
+# Installa runtime dependencies
 RUN apk update && apk add --no-cache \
     ffmpeg \
     tini \
+    bash \
     && rm -rf /var/cache/apk/*
 
 # Crea utente non-root per sicurezza
@@ -64,8 +65,7 @@ RUN mkdir -p /tmp/icv-uploads \
 
 # Imposta permessi corretti
 RUN chown -R appuser:appuser /app \
-    && chmod -R 755 /app \
-    && chmod +x server.js
+    && chmod -R 755 /app
 
 # Cambia a utente non-root
 USER appuser
