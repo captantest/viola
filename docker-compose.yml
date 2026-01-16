@@ -1,0 +1,38 @@
+version: '3.8'
+
+services:
+  icv-hf:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: icv-hf-app
+    ports:
+      - "8080:8080"
+    environment:
+      - NODE_ENV=development
+      - PORT=8080
+      - LOG_LEVEL=debug
+    volumes:
+      - ./uploads:/tmp/icv-uploads
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:8080/"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
+
+  # Servizio di test opzionale
+  icv-test:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: icv-hf-test
+    ports:
+      - "8081:8080"
+    environment:
+      - NODE_ENV=test
+      - PORT=8080
+    profiles:
+      - test
